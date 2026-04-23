@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import random
 
 #Load kaggle dataset 
 @st.cache_data
@@ -28,31 +29,35 @@ age = st.sidebar.slider("Age", min_value=10, max_value=100, value=25)
 gender = st.sidebar.selectbox("Gender", ["Male", "Female"])
 weight = st.sidebar.slider("Weight (kg)", 30, 200, 70)
 height = st.sidebar.slider("Height (cm)", 100, 250, 170)
+activity = st.sidebar.selectbox("Activity Level", ["Sedentary", "Light", "Moderate" , "Active"])
 goal = st.sidebar.selectbox("Goal", ["Weight Loss", "Maintain", "Weight Gain"])
+
 
 
 #Macro Calculation Logic
 def calculate_macros(weight, height, age, gender, goal):
     # Calculate BMR
     if gender == "Male":
-        bmr = 10 * weight + 6.25 * height - 5 * age + 5
+        bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5
     else:
-        bmr = 10 * weight + 6.25 * height - 5 * age - 161
+        bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161
     
-    # TDEE Calculation based on goal
-    if goal == "Weight Loss":
-        tdee = bmr * 1.2 - 500
-    elif goal == "Weight Gain":
-        tdee = bmr * 1.2 + 500
-    else:
+    # TDEE Calculation activity level
+    if activity == "Sedentary":
         tdee = bmr * 1.2
+    elif activity == "Light":
+        tdee = bmr * 1.375
+    elif activity == "Moderate":
+        tdee = bmr * 1.55
+    else:
+        tdee = bmr * 1.725
         
     # Standard Macro Split: 50% Carbs, 25% Protein, 25% Fat
     carbs = (tdee * 0.5) / 4
     protein = (tdee * 0.25) / 4
     fats = (tdee * 0.25) / 9
     
-    return round(tdee ,3), round(carbs,3), round(protein,3), round(fats,3)
+    return round(tdee ,2), round(carbs,2), round(protein,2), round(fats,2)
 
 calories, carbs, protein, fats = calculate_macros(weight, height, age, gender, goal)
 
@@ -71,19 +76,41 @@ st.subheader("🍲 Recommended Indian Dishes for You")
 st.write("Based on your protein and calorie needs:")
 st.write("Suggestions per 100 gm of dish")
 
-# Filter dishes that are within a reasonable range per 100g
-# High protein filter for those gaining weight, low calorie for loss
-
 
 if goal == "Weight Loss":
-    recommendations = df[(df['Calories'] <= calories-400) & (df['Calories']>40) & (df['Protein']==1.4*weight)].sort_values(by='Protein', ascending=False)
-
+    calorie_target = calories - 500
 elif goal == "Weight Gain":
-    recommendations = df[(df['Calories'] <= calories+400) & (df['Calories']>40) & (df['Protein']==2.2*weight)].sort_values(by='Protein', ascending=False)
-
+    calorie_target = calories + 500
 else:
-    recommendations = df[(df['Calories'] <= calories) & (df['Calories']>40) & (df['Protein']==1.4*weight)].sort_values(by='Protein', ascending=False)
+    calorie_target = calories
 
-# Display top 10 matches
-st.dataframe(recommendations[['Dish', 'Calories', 'Protein', 'Carbs', 'Fats']].head(10))
 
+recommendations = []
+calorie_count = calorie_target
+
+
+df_sorted = (
+    df.sort_values(by='Protein', ascending=False)
+      .drop_duplicates(subset='Dish')
+      .reset_index(drop=True)
+)
+
+
+for _, dish in df_sorted.iterrows():
+    if dish['Calories'] <= calorie_count:
+        recommendations.append(dish)
+        calorie_count -= dish['Calories']
+    
+    if calorie_count <= 0:
+        break
+
+
+if recommendations:
+    recommendations_df = pd.DataFrame(recommendations)
+else:
+    recommendations_df = pd.DataFrame(columns=df.columns)
+
+
+st.dataframe(
+    recommendations_df[['Dish', 'Calories', 'Protein', 'Carbs', 'Fats']]
+)
