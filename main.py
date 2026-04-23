@@ -7,7 +7,7 @@ def Load_Data():
     df=pd.read_csv("Indian_Food_Nutrition_Processed.csv")
 
     df=df.rename(columns={
-        df.columns[0]: 'Dish',
+        df.columns[0]: 'Dish(per 100 gm) ',
         df.columns[1]: 'Calories',
         df.columns[2]: 'Carbs',
         df.columns[3]: 'Protein',
