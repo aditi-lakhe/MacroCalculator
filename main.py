@@ -84,19 +84,13 @@ elif goal == "Weight Gain":
 else:
     calorie_target = calories
 
-
 recommendations = []
 calorie_count = calorie_target
 
+# Shuffle dataset once instead of random each time
+df_shuffled = df.sample(frac=1).reset_index(drop=True)
 
-df_sorted = (
-    df.sort_values(by='Protein', ascending=False)
-      .drop_duplicates(subset='Dish')
-      .reset_index(drop=True)
-)
-
-
-for _, dish in df_sorted.iterrows():
+for _, dish in df_shuffled.iterrows():
     if dish['Calories'] <= calorie_count:
         recommendations.append(dish)
         calorie_count -= dish['Calories']
@@ -104,13 +98,8 @@ for _, dish in df_sorted.iterrows():
     if calorie_count <= 0:
         break
 
+# Convert list → DataFrame
+recommendations_df = pd.DataFrame(recommendations)
 
-if recommendations:
-    recommendations_df = pd.DataFrame(recommendations)
-else:
-    recommendations_df = pd.DataFrame(columns=df.columns)
-
-
-st.dataframe(
-    recommendations_df[['Dish', 'Calories', 'Protein', 'Carbs', 'Fats']]
-)
+# Display
+st.dataframe(recommendations_df[['Dish', 'Calories', 'Protein', 'Carbs', 'Fats']].head(10))
