@@ -51,7 +51,7 @@ def calculate_macros(weight, height, age, gender, goal):
     protein = (tdee * 0.25) / 4
     fats = (tdee * 0.25) / 9
     
-    return round(tdee ,3), round(carbs,3), round(protein,3), round(fats,3)
+    return round(tdee ,3), round(carbs,3), round(protein,3), round(fats,3) ,weight
 
 calories, carbs, protein, fats = calculate_macros(weight, height, age, gender, goal)
 
@@ -71,11 +71,17 @@ st.write("Based on your protein and calorie needs:")
 
 # Filter dishes that are within a reasonable range per 100g
 # High protein filter for those gaining weight, low calorie for loss
+
+
 if goal == "Weight Loss":
-    recommendations = df[df['Calories'] < 150].sort_values(by='Protein', ascending=False)
+    recommendations = df[(df['Calories'] <= calories-400) & (df['Calories']>40) & (df['Protein']==1.4*weight)].sort_values(by='Protein', ascending=False)
+
+elif goal == "Weight Gain":
+    recommendations = df[(df['Calories'] <= calories+400) & (df['Calories']>40) & (df['Protein']==2.2*weight)].sort_values(by='Protein', ascending=False)
+
 else:
-    recommendations = df.sort_values(by='Protein', ascending=False)
+    recommendations = df[(df['Calories'] <= calories) & (df['Calories']>40) & (df['Protein']==1.4*weight)].sort_values(by='Protein', ascending=False)
 
 # Display top 10 matches
-st.dataframe(recommendations[['Dish', 'Calories', 'Protein', 'Carbs', 'Fats']].head(10))
+st.dataframe(recommendations[['Dish(per 100 gm)', 'Calories', 'Protein', 'Carbs', 'Fats']].head(10))
 
