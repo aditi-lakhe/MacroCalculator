@@ -27,8 +27,8 @@ df=Load_Data()
 st.sidebar.header("👤 Your Profile")
 age = st.sidebar.slider("Age", min_value=10, max_value=100, value=25)
 gender = st.sidebar.selectbox("Gender", ["Male", "Female"])
-weight = st.sidebar.slider("Weight (kg)", 30, 200, 70)
-height = st.sidebar.slider("Height (cm)", 100, 250, 170)
+weight = st.sidebar.slider("Weight (kg)", 30, 150, 50)
+height = st.sidebar.slider("Height (cm)", 100, 200, 170)
 activity = st.sidebar.selectbox("Activity Level", ["Sedentary", "Light", "Moderate" , "Active"])
 goal = st.sidebar.selectbox("Goal", ["Weight Loss", "Maintain", "Weight Gain"])
 
@@ -74,7 +74,7 @@ col3.metric("Fats", f"{fats}g")
 st.divider()
 st.subheader("🍲 Recommended Indian Dishes for You")
 st.write("Based on your protein and calorie needs:")
-st.write("Suggestions per 100 gm of dish")
+
 
 
 if goal == "Weight Loss":
