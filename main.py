@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import random
-
 #Load kaggle dataset 
 @st.cache_data
 def Load_Data():
