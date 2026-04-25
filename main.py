@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import random
+import matplotlib.pyplot as plt
 #Load kaggle dataset 
 st.set_page_config(layout="wide")
 @st.cache_data
@@ -34,7 +35,7 @@ activity = st.sidebar.selectbox("Activity Level", ["Sedentary", "Light", "Modera
 goal = st.sidebar.selectbox("Goal", ["Weight Loss", "Maintain", "Weight Gain"])
 if st.sidebar.button("Generate Plan"):
     st.sidebar.success("Plan Ready!")
-    st.sidebar.snow()
+    st.sidebar.balloons()
 with st.sidebar.expander("ABOUT PROJECT"):
     st.write("""
 We are a team of students working on a mini project focused on building a smart and user-friendly nutrition tool. Our application, the Macro Calculator and Indian Food Suggester, is designed to help users understand their daily nutritional needs and make better food choices based on Indian cuisine.
@@ -89,10 +90,9 @@ def calculate_macros(weight, height, age, gender, goal):
 calories, carbs, protein, fats = calculate_macros(weight, height, age, gender, goal)
 
 #Display Results
-st.title("MACRO CALCULATOR AND INDIAN FOOD SUGGESTER")
+st.title("MACROS CALCULATOR AND INDIAN FOOD SUGGESTER")
 st.subheader(f"YOUR DAILY TARGET::{calories}KCAL")
 #st.write(f"### Your Daily Target: **{calories} kcal**")
-
 col1, col2, col3 = st.columns(3)
 col1.metric("Carbs", f"{carbs}g")
 col2.metric("Protein", f"{protein}g")
