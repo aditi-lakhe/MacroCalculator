@@ -1,8 +1,7 @@
 import streamlit as st
 import pandas as pd
 import random
-import matplotlib.pyplot as plt
-from plot_macros import display_macro_pie_charts
+
 #Load kaggle dataset 
 st.set_page_config(layout="wide")
 @st.cache_data
@@ -10,7 +9,7 @@ def Load_Data():
     df=pd.read_csv("Indian_Food_Nutrition_Processed.csv")
 
     df=df.rename(columns={
-        df.columns[0]: 'Dish', 
+        df.columns[0]: 'Dish',
         df.columns[1]: 'Calories',
         df.columns[2]: 'Carbs',
         df.columns[3]: 'Protein',
@@ -28,16 +27,7 @@ df=Load_Data()
 # User_Inputs
 st.sidebar.image("https://images.pexels.com/photos/7462811/pexels-photo-7462811.jpeg",width=500)
 header=st.sidebar.subheader("YOU PROFILE")
-age_input = st.sidebar.text_input("Age", value="25")
-try:
-    age = int(age_input)
-    if age < 10:
-        age = 10
-    elif age > 100:
-        age = 100
-except ValueError:
-    age = 25
-    st.sidebar.error("Please enter a valid whole number for Age.")
+age = st.sidebar.slider("Age", min_value=10, max_value=100, value=25)
 gender = st.sidebar.selectbox("Gender", ["Male", "Female"])
 weight = st.sidebar.slider("Weight (kg)", 30, 150, 50)
 height = st.sidebar.slider("Height (cm)", 100, 200, 170)
@@ -63,7 +53,7 @@ Tanishka Bodke – User Interface design and layout
              
 Arpita Hande – Documentation
              
-Gargee Bhatkhande –  ideation & visualization 
+Gargee Bhatkhande – Documentation and User Interface 
 
 """)
 with st.sidebar.expander("GOAL OF THE PROJECT"):
@@ -71,6 +61,8 @@ with st.sidebar.expander("GOAL OF THE PROJECT"):
 
 This mini project reflects our collaborative effort, where each member contributed their skills to build a complete and meaningful application.
 """)
+st.sidebar.image("https://images.pexels.com/photos/33143861/pexels-photo-33143861.jpeg", width=500)
+
 
 #Macro Calculation Logic
 def calculate_macros(weight, height, age, gender, goal):
@@ -139,11 +131,12 @@ for _, dish in df_shuffled.iterrows():
     if dish['Calories'] <= calorie_count:
         recommendations.append(dish)
         calorie_count -= dish['Calories']
+    
     if calorie_count <= 0:
         break
 
 # Convert list → DataFrame
 recommendations_df = pd.DataFrame(recommendations)
 
-# Display pie charts with macro breakdown
-display_macro_pie_charts(recommendations_df)
+# Display
+st.dataframe(recommendations_df[['Dish', 'Calories', 'Protein', 'Carbs', 'Fats']].head(10))
