@@ -15,10 +15,10 @@ def display_macro_pie_charts(recommendations_df):
     st.subheader("Macro Breakdown by Dish")
     
     # Display the dataframe first
-    st.dataframe(recommendations_df[['Dish', 'Calories', 'Protein', 'Carbs', 'Fats']].head(10))
+    
     
     st.divider()
-    st.subheader("📊 Detailed Macro Analysis")
+    st.subheader(" Detailed Macro Analysis")
     
     # Create expandable sections for each dish
     for idx, (_, dish) in enumerate(recommendations_df[['Dish', 'Calories', 'Protein', 'Carbs', 'Fats']].head(10).iterrows()):

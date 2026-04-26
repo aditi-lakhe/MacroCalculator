@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import random
-
+from plot_macros import display_macro_pie_charts
 #Load kaggle dataset 
 st.set_page_config(layout="wide")
 @st.cache_data
@@ -137,6 +137,6 @@ for _, dish in df_shuffled.iterrows():
 
 # Convert list → DataFrame
 recommendations_df = pd.DataFrame(recommendations)
-
 # Display
 st.dataframe(recommendations_df[['Dish', 'Calories', 'Protein', 'Carbs', 'Fats']].head(10))
+display_macro_pie_charts(recommendations_df)
