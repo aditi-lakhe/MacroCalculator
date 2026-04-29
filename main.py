@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import random
+import time
 from plot_macros import display_macro_pie_charts
 #Load kaggle dataset 
 st.set_page_config(layout="wide")
@@ -36,6 +37,8 @@ goal = st.sidebar.selectbox("Goal", ["Weight Loss", "Maintain", "Weight Gain"])
 if st.sidebar.button("Generate Plan"):
     st.sidebar.success("Plan Ready!")
     st.sidebar.balloons()
+    time.sleep(2)
+    st.toast("Your nutrition breakdown is ready",icon="🎉")
 with st.sidebar.expander("ABOUT PROJECT"):
     st.write("""
 We are a team of students working on a mini project focused on building a smart and user-friendly nutrition tool. Our application, the Macro Calculator and Indian Food Suggester, is designed to help users understand their daily nutritional needs and make better food choices based on Indian cuisine.
